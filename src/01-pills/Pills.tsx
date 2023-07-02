@@ -76,7 +76,8 @@ export function Pills({pills, headers, toggleHeader}: PillsProps) {
         return _.orderBy(
             Object.values(pillRefs.current).map((el, index) => ({
                     width: el.clientWidth + TOGGLED_ON_PILLS_WIDTH,
-                    pill: pills.find((pill) => pill.id === String(index + 1)) as PillData,
+                    // we are casting here to PillData because we know given element always will be found in pills array
+                    pill:  pills.find((pill) => pill.id === String(index + 1)) as PillData,
                 })
             ), 'width', 'desc');
     }
@@ -108,16 +109,19 @@ export function Pills({pills, headers, toggleHeader}: PillsProps) {
 
     const transformPillsToLayoutElements = (pillRows: ComputationalPill[][]): LayoutElement[] => {
         return pillRows.reduce((acc: LayoutElement[], pillsRow, index) => {
-            acc = [...acc, ...pillsRow.map(({pill}) => ({
+            const pills: LayoutPillElement[] = pillsRow.map(({pill}) => ({
                 index: pill.id,
                 type: 'pill',
                 pill: pill,
-            } as LayoutPillElement))];
+            }));
 
-            acc = [...acc, {
+            acc = [...acc, ...pills];
+
+            const breakElement: LayoutBreakElement = {
                 index: `break-${index}`,
                 type: 'line-break',
-            } as LayoutBreakElement];
+            };
+            acc = [...acc, breakElement];
 
             return acc;
         }, []);
@@ -131,9 +135,6 @@ export function Pills({pills, headers, toggleHeader}: PillsProps) {
         const containerWidth = containerNode.current.clientWidth;
 
         const pillRows = getPillRows(sortedPillWidthsWhenToggledOn, containerWidth);
-
-        console.log('sortedPillWidthsWhenToggledOn', sortedPillWidthsWhenToggledOn);
-        console.log('pillRows', pillRows);
 
         const newLayoutElements = transformPillsToLayoutElements(pillRows);
 
