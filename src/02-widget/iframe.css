@@ -1,0 +1,15 @@
+/* do entire css reset for plugin and potentially release as external library OR under predefined URL address to not affect app html and body */
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.iframe-widget {
+    background-color: rebeccapurple;
+    margin: 0;
+    color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    font-size: 2rem;
+}
